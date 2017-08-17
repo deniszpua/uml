@@ -1,0 +1,11 @@
+FDP-645
+@startuml
+participant Customer
+control Persist
+control GooglePlay
+Customer -> Persist : All of the available packages inventory request
+Customer <- Persist : All packages inventory response
+Customer -> GooglePlay : Request for actual prices, for promoted packages
+Customer <- GooglePlay : Localized prices response
+Customer -> Customer : Render Store Scene using packages\nand description from Redstone\nand prices from GooglePlay
+@enduml
