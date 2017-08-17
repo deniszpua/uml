@@ -4,8 +4,8 @@ participant Customer
 control Persist
 control GooglePlay
 Customer -> Persist : All of the available packages inventory request
-Customer <- Persist : All packages inventory response
+Customer <- Persist : All packages inventory response 1000..3000 µsec delay
 Customer -> GooglePlay : Request for actual prices
-Customer <- GooglePlay : Localized prices response
+Customer <- GooglePlay : Localized prices response 40..300 µsec delay
 Customer -> Customer : Render Store Scene using packages\nand description from Redstone\nand prices from GooglePlay
 @enduml
