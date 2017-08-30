@@ -17,5 +17,24 @@ BillingSetupFinished --> StoreHelperInitComplete: result=SUCCESS
 StoreHelperInitComplete: mActitvity - initialized
 StoreHelperInitComplete: mBillingClient - initialized
 StoreHelperInitComplete: mPersist - null
-StoreHelperInitComplete --> [*]
+
+StoreHelperInitComplete --> PersistClientInitialized: lazy init, triggered by login event\nand following getAllPackages query
+PersistClientInitialized: mActivity - initialized
+PersistClientInitialized: mBillingClient - initialized
+PersistClientInitialized: mPersist - initialized
+
+PersistClientInitialized --> CurrencyPackagesQueryIssued: call to api/currency_packages endpoint
+CurrencyPackagesQueryIssued --> CurrencyPackagesQueryFailed: error, retrieving packages
+CurrencyPackagesQueryFailed --> PersistClientInitialized: error propagated to lua
+CurrencyPackagesQueryIssued --> CurrencyPackagesQuerySucceded: list of all currency packages received
+CurrencyPackagesQuerySucceded: mCurrencyPackages cached
+CurrencyPackagesQuerySucceded --> PlayStoreItemsQueryIssued: query for localized prices
+PlayStoreItemsQueryIssued --> PlayStoreItemsQueryFailed
+PlayStoreItemsQueryFailed: mCurrencyPackages
+PlayStoreItemsQueryFailed --> PersistClientInitialized: return currency packages\nwith non-localized prices
+PlayStoreItemsQueryIssued --> PlayStoreItemsQuerySucceded: received localized prices
+PlayStoreItemsQuerySucceded: update prices in mCurrencyPackages cache
+PlayStoreItemsQuerySucceded --> PersistClientInitialized: return currency packages with\nlocalized prices to lua
+PersistClientInitialized --> BillingClientDisconnected: triggered by onDestroy() upon app exit
+BillingClientDisconnected --> [*]
 @enduml
