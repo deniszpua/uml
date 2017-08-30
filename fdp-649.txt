@@ -1,0 +1,10 @@
+@startuml
+[*] --> ActivityReferenceSet: Activity.onCreate()
+ActivityReferenceSet --> BillingSetupStarted: Triggered billing client initialization\n(asynchronous)
+BillingSetupStarted --> BillingSetupFinished: onBillingSetupFinished
+BillingSetupFinished: result could be either SUCCESS or FAILURE
+BillingSetupFinished --> StoreHelperInitComplete: result=SUCCESS
+BillingSetupFinished --> BillingSetupStarted: result=FAILURE,\nreinit with exponential delay
+
+StoreHelperInitComplete --> [*]
+@enduml
