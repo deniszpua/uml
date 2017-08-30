@@ -1,10 +1,21 @@
+Store Helper initalization
 @startuml
 [*] --> ActivityReferenceSet: Activity.onCreate()
 ActivityReferenceSet --> BillingSetupStarted: Triggered billing client initialization\n(asynchronous)
+ActivityReferenceSet: mActivity - initialized
+ActivityReferenceSet: mBillingClient - null
+ActivityReferenceSet: mPersist - null
 BillingSetupStarted --> BillingSetupFinished: onBillingSetupFinished
-BillingSetupFinished: result could be either SUCCESS or FAILURE
-BillingSetupFinished --> StoreHelperInitComplete: result=SUCCESS
+BillingSetupStarted: mActivity - initialized
+BillingSetupStarted: mBillingClient - initializing
+BillingSetupStarted: mPersist - null
+BillingSetupFinished: mActivity - intitalized
+BillingSetupFinished: mBillingClient initialization finished\nresult either SUCCESS or FAILURE
+BillingSetupFinished: mPersist - null
 BillingSetupFinished --> BillingSetupStarted: result=FAILURE,\nreinit with exponential delay
-
+BillingSetupFinished --> StoreHelperInitComplete: result=SUCCESS
+StoreHelperInitComplete: mActitvity - initialized
+StoreHelperInitComplete: mBillingClient - initialized
+StoreHelperInitComplete: mPersist - null
 StoreHelperInitComplete --> [*]
 @enduml
