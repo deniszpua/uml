@@ -1,0 +1,36 @@
+@startuml
+Persist "1" o-- "1" PriorityQueue
+PriorityQueue "1" o-- "0..n" Request
+Persist "1" *-- "1" RequestFactory : createRequest()
+RequestFactory .. Request
+
+Persist : PriorityQueue request_queue
+Persist : httpJsonRequest()
+Persist : clearRequestQueue()
+Persist : shutdown()
+
+RequestFactory : Request createRequest(params)
+RequestFactory : void init()
+RequestFactory : resetAuthentication()
+RequestFactory : counter
+RequestFactory : auth_token
+RequestFactory : user_id
+
+PriorityQueue : PriorityQueue new()
+PriorityQueue : void addRequest()
+PriorityQueue : void clearQueue()
+PriorityQueue : void shutdown()
+PriorityQueue : List<Request> queue
+
+Request : Request new()
+Request : is_blocking
+Request : priopity
+Request : url
+Request : is_finished
+Request : handler
+Request : timeout
+Request : max_retry_attempts
+Request : retry_attempts
+Request : void doRequest()
+Request : void destroy()
+@enduml
