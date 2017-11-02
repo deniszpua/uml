@@ -4,33 +4,41 @@ PriorityQueue "1" o-- "0..n" Request
 Persist "1" *-- "1" RequestFactory : createRequest()
 RequestFactory .. Request
 
-Persist : PriorityQueue request_queue
-Persist : httpJsonRequest()
-Persist : clearRequestQueue()
-Persist : shutdown()
+class Persist {
++ PriorityQueue request_queue
++ httpJsonRequest()
++ clearRequestQueue()
++ shutdown()
+}
 
-RequestFactory : Request createRequest(params)
-RequestFactory : void init()
-RequestFactory : resetAuthentication()
-RequestFactory : counter
-RequestFactory : auth_token
-RequestFactory : user_id
+class RequestFactory {
++ Request createRequest(params)
++ void init()
++ resetAuthentication()
++ auth_token
++ user_id
+- request_counter
+}
 
-PriorityQueue : PriorityQueue new()
-PriorityQueue : void addRequest()
-PriorityQueue : void clearQueue()
-PriorityQueue : void shutdown()
-PriorityQueue : List<Request> queue
+class PriorityQueue {
++ PriorityQueue new()
++ void addRequest()
++ void clearQueue()
++ void shutdown()
++ List<Request> queue
+}
 
-Request : Request new()
-Request : is_blocking
-Request : priority
-Request : url
-Request : is_finished
-Request : handler
-Request : timeout
-Request : max_retry_attempts
-Request : retry_attempts
-Request : void doRequest()
-Request : void destroy()
+class Request {
++ Request new()
++ is_blocking
++ priority
++ url
++ is_finished
++ handler
++ timeout
++ max_retry_attempts
++ retry_attempts
++ void doRequest()
++ void destroy()
+}
 @enduml
