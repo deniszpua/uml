@@ -5,40 +5,41 @@ Persist "1" *-- "1" RequestFactory : createRequest()
 RequestFactory .. Request
 
 class Persist {
-+ PriorityQueue request_queue
-+ httpJsonRequest()
-+ clearRequestQueue()
-+ shutdown()
+  + PriorityQueue request_queue
+  + httpJsonRequest()
+  + clearRequestQueue()
+  + shutdown()
 }
 
 class RequestFactory {
-+ Request createRequest(params)
-+ void init()
-+ resetAuthentication()
-+ auth_token
-+ user_id
-- request_counter
+  + Request createRequest(params)
+  + void init()
+  + resetAuthentication()
+  + auth_token
+  + user_id
+  - request_counter
 }
 
 class PriorityQueue {
-+ PriorityQueue new()
-+ void addRequest()
-+ void clearQueue()
-+ void shutdown()
-+ List<Request> queue
+  + PriorityQueue new()
+  + void addRequest()
+  + void clearQueue()
+  + void shutdown()
+  + List<Request> queue
 }
 
 class Request {
-+ Request new()
-+ is_blocking
-+ priority
-+ url
-+ is_finished
-+ handler
-+ timeout
-+ max_retry_attempts
-+ retry_attempts
-+ void doRequest()
-+ void destroy()
+  + Request new()
+  + is_blocking
+  + priority
+  + url
+  + is_finished
+  + handler
+  + timeout
+  - id
+  + max_retry_attempts
+  + retry_attempts
+  + void doRequest()
+  + void destroy()
 }
 @enduml
