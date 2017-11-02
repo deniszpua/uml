@@ -24,7 +24,7 @@ PriorityQueue : List<Request> queue
 
 Request : Request new()
 Request : is_blocking
-Request : priopity
+Request : priority
 Request : url
 Request : is_finished
 Request : handler
