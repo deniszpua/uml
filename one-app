@@ -1,0 +1,26 @@
+@startuml
+package "Regular FDP client" {
+    "Svetlana"
+    "Alex"
+    "Artem"
+    "Dima"
+}
+
+node "FDP Backend" {
+   [ Persist ] #Violet
+   [ Handprocessor] #Grey
+   [ Chatserver] #Grey
+   [ log crawler] #Red
+}
+
+
+cloud "OneApp Streaming service" {
+    [patched FDP client]
+}
+
+[ Persist ] <- Alex : start/end streaming
+[ Persist ] --> [ log crawler] : start table state streaming signal
+[ log crawler] --> [patched FDP client] : streaming poker board updates over TCP socket
+[ log crawler] -- [ Handprocessor] : cards dealt and player actions
+[ log crawler] -- [ Chatserver] : dealer and players messages
+@enduml
