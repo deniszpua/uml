@@ -1,40 +1,13 @@
-Store Helper initalization
+FDP-645
 @startuml
-[*] --> ActivityReferenceSet: Activity.onCreate()
-ActivityReferenceSet --> BillingSetupStarted: Triggered billing client initialization\n(asynchronous)
-ActivityReferenceSet: mActivity - initialized
-ActivityReferenceSet: mBillingClient - null
-ActivityReferenceSet: mPersist - null
-BillingSetupStarted --> BillingSetupFinished: onBillingSetupFinished
-BillingSetupStarted: mActivity - initialized
-BillingSetupStarted: mBillingClient - initializing
-BillingSetupStarted: mPersist - null
-BillingSetupFinished: mActivity - intitalized
-BillingSetupFinished: mBillingClient initialization finished\nresult either SUCCESS or FAILURE
-BillingSetupFinished: mPersist - null
-BillingSetupFinished --> BillingSetupStarted: result=FAILURE,\nreinit with exponential delay
-BillingSetupFinished --> StoreHelperInitComplete: result=SUCCESS
-StoreHelperInitComplete: mActitvity - initialized
-StoreHelperInitComplete: mBillingClient - initialized
-StoreHelperInitComplete: mPersist - null
-
-StoreHelperInitComplete --> PersistClientInitialized: lazy init, triggered by login event\nand following getAllPackages query
-PersistClientInitialized: mActivity - initialized
-PersistClientInitialized: mBillingClient - initialized
-PersistClientInitialized: mPersist - initialized
-
-PersistClientInitialized --> CurrencyPackagesQueryIssued: call to api/currency_packages endpoint
-CurrencyPackagesQueryIssued --> CurrencyPackagesQueryFailed: error, retrieving packages
-CurrencyPackagesQueryFailed --> PersistClientInitialized: error propagated to lua
-CurrencyPackagesQueryIssued --> CurrencyPackagesQuerySucceded: list of all currency packages received
-CurrencyPackagesQuerySucceded: mCurrencyPackages cached
-CurrencyPackagesQuerySucceded --> PlayStoreItemsQueryIssued: query for localized prices
-PlayStoreItemsQueryIssued --> PlayStoreItemsQueryFailed
-PlayStoreItemsQueryFailed: mCurrencyPackages
-PlayStoreItemsQueryFailed --> PersistClientInitialized: return currency packages\nwith non-localized prices
-PlayStoreItemsQueryIssued --> PlayStoreItemsQuerySucceded: received localized prices
-PlayStoreItemsQuerySucceded: update prices in mCurrencyPackages cache
-PlayStoreItemsQuerySucceded --> PersistClientInitialized: return currency packages with\nlocalized prices to lua
-PersistClientInitialized --> BillingClientDisconnected: triggered by onDestroy() upon app exit
-BillingClientDisconnected --> [*]
+participant "Mobile Client"
+control Persist
+"Mobile Client" -> Persist : All of the available quests
+"Mobile Client" <- Persist : set of quests in json format (e.g. {'challenges':[{'id': 01, 'description': 'Win 10K', 'status': 'available'}, ...]})
+"Mobile Client" -> Persist : Activate challenge #42
+"Mobile Client" <- Persist : {'result': 'ok', 'challenges': [{'id': 42, 'status': 'in progress', 'progress ratio': 0,...}]}
+"Mobile Client" -> Persist : Get current quests status
+"Mobile Client" <- Persist : {'challenges': [{'id': 42, 'status': 'complete'}, {'id': 16, 'status': 'in progress', 'progress ratio': 20},...]}
+"Mobile Client" -> Persist : Collect completed challenge reward
+"Mobile Client" <- Persist : {'result': 'ok', 'player wallet': {'currencies': [{'currency id': 1, 'amount': 2356834}]}}
 @enduml
